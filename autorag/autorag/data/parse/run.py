@@ -51,7 +51,7 @@ def run_parser(
 		file_types = set(
 			[os.path.basename(data_path).split(".")[-1] for data_path in data_path_list]
 		)
-		set_file_types = set([module["file_type"] for module in module_params])
+		set_file_types = set([module.get("file_type", "all_files") for module in module_params])
 
 		# Calculate the set difference once
 		file_types_to_remove = set_file_types - file_types
@@ -60,12 +60,12 @@ def run_parser(
 		module_params = [
 			param
 			for param in module_params
-			if param["file_type"] not in file_types_to_remove
+			if param.get("file_type", "all_files") not in file_types_to_remove
 		]
 		modules = [
 			module
 			for module, param in zip(modules, module_params)
-			if param["file_type"] not in file_types_to_remove
+			if param.get("file_type", "all_files") not in file_types_to_remove
 		]
 
 		# create a list of only those file_types that are in file_types but not in set_file_types
